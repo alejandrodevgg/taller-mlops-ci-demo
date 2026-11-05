@@ -1,0 +1,14 @@
+# generated data (CI regenerates via scripts/make_flights_sample.py)
+data/raw/*.csv
+data/work/
+# model outputs (CI artifacts, never committed)
+models/*.json
+models/**/*.json
+models/trained/*.pkl
+# local env + caches
+__pycache__/
+*.pyc
+.venv/
+mlflow.db
+mlruns/
+.env

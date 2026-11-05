@@ -1,0 +1,36 @@
+# requirements.txt — UNICO fichero de pins del pipeline
+# Python 3.11 (images y CI). La paridad cliente/servidor MLflow es obligatoria:
+# aqui 3.17.2 == imagen ghcr.io/mlflow/mlflow:v3.17.2 del compose.
+# xgboost unificado 1.7.6 (el libro traia 1.7.5 en un fichero y 1.7.6 en otro:
+# trampa de serializacion; aqui eso no puede pasar porque SOLO hay un fichero).
+
+# --------------------------------------------- data / ML
+pandas==2.2.3
+numpy==1.26.4
+scikit-learn==1.5.2
+xgboost==1.7.6
+joblib==1.4.2
+pyyaml==6.0.2
+
+# --------------------------------------------- data contract (s3)
+pandera==0.35.0
+
+# --------------------------------------------- tracking + registry (MLflow 3)
+mlflow==3.17.2
+
+# --------------------------------------------- serving
+fastapi==0.162.0   # >=0.120 para starlette 1.x: prometheus-fastapi-instrumentator 8.x exige starlette>=1
+uvicorn==0.30.6
+
+# --------------------------------------------- observabilidad (s9, opcional)
+opentelemetry-distro==0.66b2
+opentelemetry-instrumentation-fastapi==0.66b2
+# Captura los logging.info() estándar (uvicorn, api) y los envía como logs
+# OTLP -> Loki. Sin este paquete ni las dos env vars de v0.7, Loki queda vacío:
+# la instrumentación de FastAPI solo genera TRAZAS, no logs.
+opentelemetry-instrumentation-logging==0.66b2
+# El exporter OTLP NO viene con el distro: sin él, opentelemetry-instrument
+# revienta al configurar el pipeline ("'otlp_proto_grpc' not found in entry
+# point") y las trazas no salen. Versión = api/sdk que resuelve el distro.
+opentelemetry-exporter-otlp-proto-http==1.45.2
+prometheus-fastapi-instrumentator==8.1.0
